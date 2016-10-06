@@ -9,3 +9,7 @@
 16. use `defined?(super)` to check whether a superclass implements a method that you (might) be over-writing
   - get a method object from an original method and bind it to `self` for re-use later to be absolutely sure you're calling the original version of a method
   - also check out `__send__` for this same use case
+17. command methods cause something in the outside world to change
+  - as opposed to query methods, which just return some information
+  - keep commands and queries separated
+    - pay it back or pay it forward, but never both
