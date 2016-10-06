@@ -95,4 +95,42 @@ RSpec.describe Customer do
       end
     end
   end
+
+  describe "#html_statement" do
+    context "no rentals" do
+      it "returns a valid html_statement" do
+        customer = described_class.new('Kira')
+        expected_statement =
+          "<h1>Rentals for <em>Kira</em></h1><p>\n"\
+          "<p>You owe <em>0</em><p>\n"\
+          "On this rental you earned "\
+          "<em>0</em>"\
+          " frequent renter points<p>"\
+
+        expect(customer.html_statement).to eq expected_statement
+      end
+    end
+
+    context "with rentals" do
+      it "returns a valid html_statement" do
+        freedom_writers = Movie.new('Freedom Writers', 0)
+        lives_of_others = Movie.new('Das Leben der Anderen', 1)
+
+        customer = described_class.new('Kira')
+        customer.add_rental(Rental.new(freedom_writers, 3))
+        customer.add_rental(Rental.new(lives_of_others, 5))
+
+        expected_statement =
+          "<h1>Rentals for <em>Kira</em></h1><p>\n"\
+          "\tFreedom Writers: 3.5<br>\n"\
+          "\tDas Leben der Anderen: 15<br>\n"\
+          "<p>You owe <em>18.5</em><p>\n"\
+          "On this rental you earned "\
+          "<em>3</em>"\
+          " frequent renter points<p>"\
+
+        expect(customer.html_statement).to eq expected_statement
+      end
+    end
+  end
 end
