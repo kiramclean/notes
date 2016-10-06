@@ -8,10 +8,6 @@ RSpec.describe Movie do
       expect(subject.title).to eq 'title'
     end
 
-    it 'exposes getter for price_code' do
-      expect(subject.price_code).to eq 1234
-    end
-
     it 'has the right price code for regular' do
       expect(Movie::REGULAR).to eq 0
     end
@@ -77,8 +73,8 @@ RSpec.describe Customer do
 
     context "with rentals" do
       it "returns a valid statement" do
-        freedom_writers = Movie.new('Freedom Writers', 0)
-        lives_of_others = Movie.new('Das Leben der Anderen', 1)
+        freedom_writers = Movie.new('Freedom Writers', RegularPrice.new)
+        lives_of_others = Movie.new('Das Leben der Anderen', NewReleasePrice.new)
 
         customer = described_class.new('Kira')
         customer.add_rental(Rental.new(freedom_writers, 3))
@@ -113,8 +109,8 @@ RSpec.describe Customer do
 
     context "with rentals" do
       it "returns a valid html_statement" do
-        freedom_writers = Movie.new('Freedom Writers', 0)
-        lives_of_others = Movie.new('Das Leben der Anderen', 1)
+        freedom_writers = Movie.new('Freedom Writers', RegularPrice.new)
+        lives_of_others = Movie.new('Das Leben der Anderen', NewReleasePrice.new)
 
         customer = described_class.new('Kira')
         customer.add_rental(Rental.new(freedom_writers, 3))
