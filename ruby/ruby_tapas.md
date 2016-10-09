@@ -13,3 +13,30 @@
   - as opposed to query methods, which just return some information
   - keep commands and queries separated
     - pay it back or pay it forward, but never both
+18. some methods on core classes (eg `Array#+`) are written in C not ruby, and sometimes the return class is hard coded
+  - inheriting from core classes won't behave the way you think
+  - use delegation not inheritance to re-use behaviour from core classes
+  - `include Enumerable` and delegate `#each` to "inherit" enumerable behaviour
+19. add a layer of indirection to reduce coupling between collaborators
+  - sometimes overkill, careful not to make method calls too abstract, but generally good practice
+20. the only time assigning an object/constant to a variable causes ruby to change the object/constant itself is assigning a name to a Struct
+  - assigning an anoymous class/module to a constant in ruby is very special -- ruby sets the `name` of that class/module to the name of the constant it was assigned to
+  - can get/set values of a struct using hash syntax
+  - equality operator comes for free
+  - `Struct`s can introspect and iterate over their elements
+  - also come with `Enumerable`
+  - `Struct`s can also take a block to have method defined on them
+21. serparate domain model logic and UI concerns by pulling out observers and listeners
+  - make the model observable (see gang of four description)
+  - create life-cycle methods that get triggered by checking dirty attributes
+  - keep controllers' responsibilities limited to current UI state (current session, user, response type, etc)
+22. do not rescue overly general exception classes
+  - do not use rescue inline, except to intercept errors (eg to log or track), before passing them along to raise eventually anyway (turning them into return values)
+  - ruby always stores a reference to the currently raised exception in th `$!` variable
+    - can `include English` and use `$ERROR_INFO` instead of `$!`
+23. tempfiles are removed once the ruby process ends
+  - great way to work with clis that expect to work with files as input/output
+24. avoid incidental change to make diffs easier to understand
+  - no explicit returns (might have to remove them later anyway)
+  - use parens when you care about the return value (so you don't have to add them later to chain another method, for example)
+  - leave a dangling comma at the end of an array to prevent an invalid array if you add an element but forget the comma
