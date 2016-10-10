@@ -48,4 +48,20 @@
   - make generated methods easy to extend by putting them in a module instead of adding them to a class
 28. can define `.to_s` in an anonymous module to give it a meaningful name
   - can be messy, can also check for a named constant in the current class and use that (or a create a new one once) and make its `to_s` method output a nice name
-29.
+29. ruby has special `$stdout` and `$stderr` global variables for standard output and standard error
+  - can define a method to capture output in a `StringIO` object and still restore the old `$stdout` afterward
+    - `ensure` executes even if an exception is raised inside the block
+    - ruby also has `STDOUT` constant that is unaffected by reassigning `$stdout`
+  - can also capture std io in a separate `Thread` by reading the std output using an `IO.pipe`
+30. to execute a subprocess in ruby use backticks (can also use `%x{...}`, useful if the comman itself contains backticks)
+  - backticks are actually operator in ruby, so they can be overloaded (but don't!)
+31. move listener logic into its own classes to make observable pattern easier to grok
+32. block given to a new hash gets executed iff we try to access a missing key
+  - useful as a cache for expensive values if the default value is not just a value but needs to be calculated or fetched from somewhere, eg via http
+  - also useful for defining hashes of arbitrary nesting, can use a new hash whose default value is an empty hash, whose default value is an empty hash, etc.
+33. naming a class is just assigning it to a constant
+  - camel cased constants are reserved for class names
+  - assigning a class to a constant overwrites the `name` method to be the name of the class
+34. can use enumerability and introspection features of `Struct` to put data in and get it out as a hash
+  - avoid using `Struct`-specific features (eg `members`) outside of struct classes, to make it possible to change the underlying structure of the class later
+35.
