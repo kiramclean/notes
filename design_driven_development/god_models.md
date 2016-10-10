@@ -1,0 +1,2 @@
+- when working with legacy code, preserve the context in which you find weird code
+  - preserve the knowledge that let to that edge case being handled in the first place
