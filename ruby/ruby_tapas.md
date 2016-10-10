@@ -40,3 +40,12 @@
   - no explicit returns (might have to remove them later anyway)
   - use parens when you care about the return value (so you don't have to add them later to chain another method, for example)
   - leave a dangling comma at the end of an array to prevent an invalid array if you add an element but forget the comma
+25. `OpenStruct`s provide a reader method for each key of a hash passed in on initialization
+26. FFI gem allows calling foreign C libraries from within ruby
+  - can interface dynamically from within ruby directly to an outside C library, and allow the C library to call back in to the ruby program using lambdas
+27. use `module_eval` to dynamically define instance methods using a passed-in key
+  - create a new method in the context of a new `Module` (inside an included `Module`) to insert it into an object's ancestor chain in a predictable way
+  - make generated methods easy to extend by putting them in a module instead of adding them to a class
+28. can define `.to_s` in an anonymous module to give it a meaningful name
+  - can be messy, can also check for a named constant in the current class and use that (or a create a new one once) and make its `to_s` method output a nice name
+29.
