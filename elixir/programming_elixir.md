@@ -16,3 +16,5 @@ _Dave Thomas_
   - look for a recursive solution that will eventually end up calling the anchor case
 
 - always use parens around function params in pipelines
+
+*invariant* == a condition that is true on any return from any call or nested call
