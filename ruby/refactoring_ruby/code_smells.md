@@ -241,3 +241,38 @@ subclasses that do not respond to implementations of the superclass
 subclasses do not support public behaviour of the superclass
   --> Replace Inheritance with Delegation
 
+## Comments
+
+- comments are usually present because the code is bad
+- refactor until the comments are redundant
+- if you must comment, it should be about *why*, not *how*
+
+comment explains what a block of code does
+  --> Extract Method
+
+method is extracted but commented to explain what it does
+  --> Rename Method
+
+comments explain rules about the required state of a system
+  --> Introduce Association
+
+## Metaprogramming Madness
+
+`method_missing` hook that is used other than when an object's interface cannot be determined at coding time
+  --> Replace Dynamic Receptor with Dynamic Method Definition
+
+`method_missing` call is necessary
+  --> Isolate Dynamic Receptor
+
+## Disjointed API
+
+project does not take advantage of all the configuration options
+  --> Introduce Gateway
+
+project is not interacting with an external API in a fluent way
+  --> Introduce Expression Builder
+
+## Repetitive Boilerplate
+
+when the purpose of the code can be captured clearly in a declarative statement
+  --> Introduce Class Annotation
