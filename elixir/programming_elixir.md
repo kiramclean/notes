@@ -18,3 +18,20 @@ _Dave Thomas_
 - always use parens around function params in pipelines
 
 *invariant* == a condition that is true on any return from any call or nested call
+
+## Dictionary Data Types
+### Maps
+- when you want to pattern match against a key
+- anytime you don't need a keyword
+- good performance even when very large
+
+- cannot bind keys in Map pattern matching
+
+### Keyword Lists
+- when you need more than one entry with the same key
+- when you need to guarantee the elements are ordered
+
+- typically used in the context of options passed to functions
+- have access to all `Keyword` and `Enum` module methods
+
+
