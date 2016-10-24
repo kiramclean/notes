@@ -64,4 +64,15 @@
   - assigning a class to a constant overwrites the `name` method to be the name of the class
 34. can use enumerability and introspection features of `Struct` to put data in and get it out as a hash
   - avoid using `Struct`-specific features (eg `members`) outside of struct classes, to make it possible to change the underlying structure of the class later
-35.
+35. use `call` as the method name for executable actions done by an object
+  - procs and lambdas respond to `call`, so you can change implementation easily without worrying about the callers
+  - avoid naming a method something redundant that just reiterates the class name (to avoid having things like `notifier.notify`, or `runner.run`)
+36. lambdas error with extra arguments, procs will just throw away an extra argument
+  - return statement inside a lambda stops execution of just the lambda itself
+  - return statement inside a proc ends execution of the containing method
+    - procs contain a reference to their binding (context in which they are run) and return acts like a return in _that_ context
+37. threequals is the smart equality matcher in ruby
+  - used by case statements under the hood
+  - Proc class aliases the threequals operator to `call`
+  - means you can use them as a predicate in a case statement
+38. pass a proc or block as a second argument to a method to allow flexible use by callers
