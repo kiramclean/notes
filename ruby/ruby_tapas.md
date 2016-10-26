@@ -76,3 +76,18 @@
   - Proc class aliases the threequals operator to `call`
   - means you can use them as a predicate in a case statement
 38. pass a proc or block as a second argument to a method to allow flexible use by callers
+39. if you don't know how to do something, do a spike -- write some code, don't worry about testing, and make a skeleton that works
+40. can write ruby scripts directly from the command line
+  - can change incrementally toward a usable method from this quick and dirty approach
+  - make small changes so your changes are easy
+41. use `scan` on String instead of looping with `match`
+42. CPU and IO usually do not kill performance, it's usually RAM
+  - ruby is optimized for programmer happiness, not performance
+  - e.g. `CSV#read` stores an object in memory for every row it reads
+  - use streaming processing by taking advantage of ruby's returning enumerators whenever an enumerable method is called without a block
+43. `^` is exclusive or in ruby
+  - first value must be boolean or nil
+44. `one?` returns true iff a collection has only a single truthy value
+45. `Hash` uses the same default value everytime if it's given as a default argument but if it's given a block the block executes on each iteration
+46. test right out of the gate to create that culture for your app so that it is always developed in a test-driven way
+
