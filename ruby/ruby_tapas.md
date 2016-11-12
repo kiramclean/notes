@@ -90,4 +90,19 @@
 44. `one?` returns true iff a collection has only a single truthy value
 45. `Hash` uses the same default value everytime if it's given as a default argument but if it's given a block the block executes on each iteration
 46. test right out of the gate to create that culture for your app so that it is always developed in a test-driven way
+47. insert a real thing to check into the system you are testing, so you can be sure your thing works and that you're not just testing a library
+  - add a smoke test that does not get into implementation details to make sure you don't completely ruin something when refactoring
+48. grab an unbound method object with `instance_method` -- can be bound to a given instance of a class later with `.bind` and called with `call`
+  - use this inside a `memoize` macro to turn any method into one that memoizes its return values
+49. including a module can be a problem because it makes all that module's methods part of the public API of the client class
+  - it also grabs all the methods in the module, not just the one or two you want
+  - can solve this by defining a module level version and an instance level version of the same method that just calls the module level version
+  - module methods intended for internal use only can be made private in a module
+  - downside is that now you have to define 2 versions of every method you write
+  - use ruby's `module_function` macro to do exactly this for free!
+50. can put small utility methods inside a top-level namespace to make them easily and cheaply accessible to client classes
+51. structure a project with a top-level file that requires others and a `lib` directory with the code
+  - change the load path (`$LOAD_PATH.unshift(File.expand_path('path/to/lib', __FILE__))`) so you can just require your own library and require standard libraries inside your code
+  - then include your lib modules
+52.
 
