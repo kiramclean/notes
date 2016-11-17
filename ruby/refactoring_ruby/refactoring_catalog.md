@@ -172,4 +172,282 @@ pp 142-147
 3. replace params in the receiving method
 
 ### Remove Named Parameter
+pp 147-150
 
+- more readability isn't worth the indirection
+- put back the named params to standard param list
+
+1. choose the param whose name you want to remove and move it to the beginning of the param list
+2. replcae the named param in the calling code
+
+### Remove Unused Default Parameter
+pp 150-152
+
+- method param has a default value, but the method is never called without this param
+- unused flexibility is bad
+
+1. remove the default from the method signature
+2. remove any code that checks for the default value
+
+### Dynamic Method Definition
+pp 152-158
+
+- methods could be more concise if they were defined dynamically
+
+1. dynamically define one of the similar methods
+2. convert the additional similar methods to use the dynamic definition
+
+### Replace Dynamic Receptor with Dynamic Method Definition
+pp 158-160
+
+- you want to define methods dynamically but not have to deal with the pain of debugging `method_missing`
+- use dynamic method definition instead of dynamic method receiving
+- only use `method_missing` if your class absolutely must respond to unknown method calls -- can lead to the wrong class raising a `NoMethodError`
+
+
+1. dynamically define the necessary methods
+2. remove `method_missing`
+
+### Isolate Dynamic Receptor
+pp 160-165
+
+- move `method_missing` logic to its own class when a class containing it has become painful to change
+- when the interface of a class really cannot be predetermined and you have to use `method_missing`, isolate its use
+
+1. create  new class whose sole responsibility is handling dynamic method calls
+2. copy the logic from `method_missing` on the original class to the `method_missing` of the new class
+3. create a method on the original class to return an instance of the new class
+4. change all client code that previously called the dynamic methods on the original object to call the new delegator method
+5. remove `method_missing` from the original object
+
+### Move Eval from Runtime to Parse Time
+pp 165-166
+
+- if you need `eval`, limit its use to parse time
+- move it from within the method definition to defining the method itself
+
+1. expand the scope of the string being `eval`-ed to include the method definition itself
+
+## Moving Features Between Objects
+
+### Move Method
+pp 167-172
+
+- a method is or will be used more by another class than its own class
+- move the method to the class that uses it the most
+
+1. examine all the features used by the source method that are defined on the source class, consider whether these should be moved, too
+2. check sub- and super-classes of the source class for other definitions of the method
+3. define the method in the target class
+4. copy code from source to target
+5. reference the right target from the source
+6. turn the source method into a delegating method
+7. decide to either remove the source method completely or leave it as a delgating method
+8. if you remove the source method, replace all the references with references to the target method
+
+### Move Field
+pp 172-175
+
+- a field is or will be used more by another class than its own class
+- create a new attribute reader in the target class and change all its users
+
+1. use Self Encapsulate Field if the methods that access the field will be moving too or if a lot of methods access the field
+2. create a reader in the target class
+3. reference the target object from the source
+4. replace all references to the source field with references to the target
+
+### Extract Class
+pp 175-179
+
+- a class is a crisp abtraction with a few clear responsibilities
+- extract subsets od data and subsets of methods that go together
+
+1. split the responsbilities of the class
+2. create a new class to express these new responsbilities
+3. link to the new class from the old
+4. use Move Field on each field you're moving
+5. use Move Method on each method you're moving, starting with lower level methods
+6. review and reduce the interfaces of each class, try to make only one-way links
+7. decide whether multiple clients are allowed to access this new class, if so, decide whether the new class should be a reference object or immutable value object
+
+- good for concurrency because you can have separate locks on the separate classes
+
+### Inline Class
+pp 179-181
+
+- a class doesn't really do anything
+- move the runt class to the other class that uses it the most
+
+1. declare the public api of the source class onto the absorbing class and delegate all methods to the source class
+2. change all reference from the source class to the absorbing class
+3. use Move Method and Move Field to move features from source to absorbing until there is nothing left
+
+### Hide Delegate
+pp 182-184
+
+- a client calls a delegate class of an object
+- objects need to know as little as possible about the system as a whole
+
+1. for each method on the delegate, create a simple delegating method on the sender
+2. adjust the client call to the sender
+3. if no one needs the delegate anymore, remove the accessor for it
+
+### Remove Middle Man
+pp 185-186
+
+- when there is too much delegation
+- call the delegate directly
+
+1. create an accessor for the delegate
+2. remove the method from the sender and replace the client call to the method directly on the delegate
+
+## Organizing Data
+
+### Self Encapsulate Field
+pp 188-191
+
+- accessing a field directly has caused awkward coupling
+- use getters and setters
+- advantages of indirect variable access:
+  - allows subclasses to override how they want to get that information
+  - supports more flexibility in managing data (e.g. lazy initialization)
+- advantages of direct variable access:
+  - code is easier to read
+
+1. create a setting method for the field
+2. find all the references to the field and replace them with the getters and setters
+3. double check you got all the references
+
+### Replace Data with Value Object
+pp 191-194
+
+- data needs behaviour
+- turn the data into an object
+
+1. create a class for the value
+2. change the attribute reader in the source class to call the reader in the new class
+3. assign the field in the source class using the consstructor in the new class if the field is in the source class constructor
+4. change the attribute reader to create a new instance of the new class
+5. maybe do Change Value to Reference
+
+- value objects should be immutable
+- if you need a value object to change or to be associated with many other objects, use Change Value to Reference
+
+### Change Value to Reference
+pp 194-198
+
+- a class has many equal instances that can be replaced with a single object
+- turn the object into a reference object
+- reference objects stand for one object in the real world (customer, order, account), use object identity to test whether they are equal
+- value objects are defined only through their data values, can have many duplicates floating around, use values to test whether they are equal
+
+1. use Replace Constructor with Factory Method
+2. decide what object is responsible for providing access to the objects
+3. decide whether the objects are pre-made or created on the fly
+4. alter the factory method to return the reference object
+
+### Change Reference to Value
+pp 198-201
+
+- a reference object existst that is small, immutable, and awkward to manage
+- make it a value object
+- do this when a reference object becomes difficult to manage
+- value objects must be immutable
+- relationships to value objects can change, but the objects themselves cannot
+
+1. check that the candidate object is immutable or can be made immutable
+2. create an `==` method and an `eql?` method
+3. create a hash method
+4. consider removing any factory method and making a constructor public
+
+- need to write a `hash` method or else `Hash` and any collection that relies on hashing, like `Array`'s `uniq` method will be weird
+
+### Replace Array with Object
+pp 201-206
+
+- an array exists where different elements mean different things
+- replace the array with an object that has a field for each element
+- use arrays only to contain a collection of similar objects in some order
+- don't count on remembering the order of an array's elements
+
+1. create a class to represent the information in the `Array`
+2. define `[]` and `[]=` methods so callers expecting an array can be changed one by one
+3. construct the new object wherever the `Array` was instantiated
+4. add readers for each element in the `Array`, named after the purpose of the `Array` element, changing the clients to use this reader
+5. add writers for any attribute in the `Array` that is written to by a client, named after the purpose of the `Array` element, changing the clients to use these writers
+6. when all `Array` accesses are replaced by custom accessors, remove the `[]` and `[]=` methods
+
+### Replace Hash with Object
+pp 206-210
+
+- a hash exists that is storing many different types of objects and is used for more than one purpose
+- replace the hash with an object that has a field for each key
+- only use hashes to store similar values
+- you shouldn't have to remember what keys a hash has to know what it is for
+
+1. create a new class to represent the information in the `Hash`
+2. define `[]` and `[]=` so callers expecting a hash can be changed one by one
+3. construct the new object wherever the `Hash` was instantiated
+4. add readers for any attribute in the `Hash` that is read, name the reader after the key, change the clients to use this reader
+5. add writers for any attribute in the `Hash` that is written to, name the writer after the key, change the clients to use the writer
+6. when all the `Hash` accesses are replaced by custom accessors, remove the `[]` and `[]=` methods
+
+### Change Unidirectional Association to Bidirectional
+pp 210-213
+
+- two classes are using each others' features, but there is only a one-way link
+- add back pointers and change modifiers to update both sets
+- an object needs to get access to other objects that refer to it.. this is going backwards along the pointer
+- pointers are one-way links, so you have to use a back pointer
+
+1. add a field for the back pointer
+2. decide which class will control the association
+3. create a helper on the non-controlling side of the association, name it to show its restricted use
+4. if the existing modifier is on the controlling side, modify it to update the back pointers
+  - if the existing modifier is on the controlled side, create a controlling method on the controlling side and call it from the existing modifier
+
+- use a set if you want a collection that cannot contain the same item more than once
+- pattern is always: tell the other object to remove its reference to you, set your pointer to the new object, tell the new object to add a pointer to you
+
+### Change Bidirectional Association to Unidirectional
+pp 214-217
+
+- two classes are using each others' features and one no longer needs features from the other
+- drop the unneeded end of the association
+- bidirectional associations can lead to zombie objects, that should be gone but aren't because of a reference that wasn't cleared
+
+1. examine the readers of the field that holds the pointer to see if you can remove it
+  - see if it's possible to determine the other object without using the pointer
+2. if clients need the reader, use Self Encapsulate Field, then use Substitute Algorithm on the attribute reader
+3. if clients don't need the reader, change each user of the field so it gets the object field in a different way
+4. once there is no reader left in hte field, remove all updates to the field and remove it
+
+### Replace Magic Number with Symbolic Constant
+pp 217-218
+
+- a literal number has a particular meaning
+- create a constant and name it after the meaning then replace the number with it
+- numbers with special meaning that is not obvious are bad
+
+1. declare a constant and set it to the value of the magic number
+2. find all occurrences of hte magic nuimber
+3. if the number is the same as the constant, use the constant instead
+
+### Encapsulate Collection
+pp 219-224
+
+- a method returns a collection
+- return a copy of the collection instead and provide add/remove methods
+- client accessors should not be able to alter the contents of another object's collections
+- any accessor for a collection should prevent manipulation of the collection and hide details about its structure
+- only expose a way to add or remove elements, not to change the existing elements in the collection -- the owning class owns the collection
+
+1. add `add` and `remove` methods for the collection
+2. initialize the field to an empty collection
+3. find callers of the attribute writer, modify the writer to use `add` and `remove`
+4. find all users of the reader that modify the collection, change them to use the `add` and `remove` methods
+5. when all the uses of the reader that modify the collection have been changed, modify the reader to return a copy of the collection
+6. find the users of the attribute reader, move code to the host object where necessary
+
+### Replace Record with Data Class
+pp 224-
