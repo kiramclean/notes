@@ -450,4 +450,68 @@ pp 219-224
 6. find the users of the attribute reader, move code to the host object where necessary
 
 ### Replace Record with Data Class
-pp 224-
+pp 224
+
+- you need to interface with a record struture in a traditional programming environment
+- make a dumb data object for the record
+- can be useful to create an interfacing class to deal with the external record
+- also when you have an Array where an index has a special meaning (use Replace Array with Object)
+
+1. create a class to represent the record
+2. give the class a field with an accessor for each data item
+3. now you have a dumb data object with no behaviour
+
+### Replace Type Code with Polymorphism
+pp 225-232
+
+- a type code affects the behaviour of the class
+- replace the type code with classes - one for each type code variant
+- can usually tell by the presence of a case statement
+- when removing conditional logic, use:
+  - Replace Type Code with Polymorhpism
+    - when the methods using the type code make up most of the class
+  - Replace Type Code with Module Extension or Replace Type Code with State/Strategy
+    - when the class has a lot of behaviour that doesn't depend on the type code
+    - Module Extension mixes in type code behaviour, instance variables are automatically shared bewteen object and module, which is simpler
+    - State/Strategy uses delegation, no sharing of instance variables, but this extra behaviour can be limited (unlike Modules, which you can't unmix)
+
+1. create a class to represent each type variant
+2. change the class that uses the type code into a module, include this module in each of the new type classes
+3. choose one of the methods that uses the type code, override this method on one of the type classes
+4. do the same for all the other type classes, removing the method on the module when you're done
+5. repeat for the other methods that use the type code
+6. remove the module if it no longer houses any behaviour
+
+### Replace Type Code with Module Extension
+pp 232-238
+
+- type code affects the behaviour of a class
+- replace hte type code with dynamic module extension
+- the original class and the module both have access to the same instance variables
+- modules cannot be unmixed -- once they are included in a class, their behaviour is hard to remove
+
+1. perform Self-Encapsulate Field on the type code
+2. create a module for each type code variant
+3. make the type code writer extend the type module appropriately
+4. choose one of the methods that use the type code and override this method on one of the type modules
+5. do the same for the other type modules, returning default behaviour from the class
+6. repeat for other methods that use the type code
+7. pass the module into the type code setter instead of the old type code
+
+### Replace Type Code with State/Strategy
+pp 239-251
+
+- a type code affects behaviour of a class and the type code changes at runtime
+- replace the type code with a state object
+- goal is to remove conditional logic
+- use when the type code is changed at runtime and change procedure is complex enough that module extension doesn't work
+- strategy is a better term for simplifying a single algorithm
+- if you're moving state-specific data and the object is changing states, use "state pattern"
+
+1. perform Self Encapsulate Field on the type code
+2. create empty classes for each of the polymorphic objets and a new instance variable to represent each of the types (this is object that we delegate to)
+3. use the old type code to determine which of the new type objects should be assigned to the type instance variable
+4. choose a method to behave polymorphically, add a method with the same name on the type classes and delegate to it from the parent object
+5. repeat for the other type classes
+6. repeat for all the other methods that use the type code
+
