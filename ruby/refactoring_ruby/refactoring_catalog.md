@@ -515,3 +515,19 @@ pp 239-251
 5. repeat for the other type classes
 6. repeat for all the other methods that use the type code
 
+### Replace Subclass with Fields
+pp 251-255
+
+- subclasses that vary only in methods and return constant data
+- change the methods to superclass fields and eliminate the subclasses
+- any class that has only constant methods does not justify its existence
+
+1. Replace Constructor with Factory Method on the subclasses
+2. modify the superclass constructor to initialize a field for each constant method
+3. add or modify subclass constructors to call the new superclass constructor
+4. implement each constant method in the superclass to return the field and remove the method from the subclasses
+5. when all the subclass methods have been removed, use Inline Method to inline the constructor into the factory method of the superclass
+6. remove the subclass
+7. repeat inlining the constructor and eliminating each subclass until they are all gone
+
+

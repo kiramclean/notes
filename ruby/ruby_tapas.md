@@ -104,5 +104,24 @@
 51. structure a project with a top-level file that requires others and a `lib` directory with the code
   - change the load path (`$LOAD_PATH.unshift(File.expand_path('path/to/lib', __FILE__))`) so you can just require your own library and require standard libraries inside your code
   - then include your lib modules
-52.
+52. stubbed objects receiving mocked methods can be hard to understand
+  - beware you're not testing implementation details or specific methods, test behaviour instead
+  - make sure you're testing something real
+  - only mock what you own
+  - adapter classes are bad to mock -- do not stub external apis
+53. test a group of files, just one file, or just one line using your test library
+54. stub an external ffi api and pass it in as an argument on initialization of a main loop method
+55. ruby's `__FILE__` constant always contains the name of the file it is written in
+  - `$PROGRAM_NAME` == `$0` == the name of the currently running program
+  - if `$PROGRAM_NAME == __FILE`, the file is being run as a script, so just call methods with it using '$stdin' as the input to allow it to double as a script and library
+  - if they don't match, the file is being used as a library, so don't autorun anything
+56. use `rcodetools` gem for useful ruby dev tools
+  - like `xmpfilter`, it executes ruby code and adds specially formatted comments with the value of the previously executed line
+  - this is what Avdi uses in the videos to execute code as he goes
+57. use rspec mocks instead of minitest combination of `Struct`s, `OpenStruct`s, and `Mocks` for more readable tests
+58. `ARGF` is like a special read-only IO object
+  - reading from the `ARGF` constant ruby first looks through the `argv` array and treats any arguments there as filenames to open, then it concatenates the return values as though all the files were one
+  - if there are no arguments in `argv`, ruby treats `ARGF` as an alias for `$stdin`
+59. an enumerator takes a method that yields mulitple times and can run it stepwise on demand, instead of all at once
+  - turns it into a lazy enumerable block so you can do whatever you want to each element
 
