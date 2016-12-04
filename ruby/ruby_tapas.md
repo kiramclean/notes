@@ -124,4 +124,26 @@
   - if there are no arguments in `argv`, ruby treats `ARGF` as an alias for `$stdin`
 59. an enumerator takes a method that yields mulitple times and can run it stepwise on demand, instead of all at once
   - turns it into a lazy enumerable block so you can do whatever you want to each element
+60. use `ascend` from ruby's `Pathname` standard library to see the hierarchy of directories for a path
+61. stub a probe withe a fake method and expect the probe to receive a the method inside a block to test that the block is really yielded to
+  - use `.ordered` option to test that expectations are received in a given order
+62. an `Enumerator` returns the next value yielded by the method every time 'next' is called
+  - `Fiber` is a primitive code block that can be paused and resumed
+63. rubygems comes with methods, check them out (e.g. `get_on_gem_name`)
+  - write a message first with the arguments you know you'll need and work backwards to see what object should be receiving that message
+64. ruby's `__callee__` variable always contains the current method name
+  - useful to avoid duplication of a method name within itself
+65. make sure you clean up resources if you're writing code that is managing a resource (e.g. a pointer)
+  - use `double.as_null_object` to allow a double to receive whatever methods you want and don't care about and not blow up
+  - use `ensure` to make sure code gets executed even if an exception is raised before it
+  - make sure it's always possible to access low-level bindings inside of a higher-level api
+66. avoid calling apis when possible, for performance's sake
+  - caching domain objects can be problematic:
+    - persisting data means you can't change your domain code unless you diligently flush the cache whenever new changes are rolled out
+    - adding any new fields also requires flushing the cache, because all old cached objects will have `nil` for this new field
+    - objects must always be serializable (e.g., cannot store lambdas in them)
+  - better to cache raw response bodies rather than domain objects
+    - no object version conflicts
+    - all available data is there, even the unused parts
+    - raw strings are always serializable
 

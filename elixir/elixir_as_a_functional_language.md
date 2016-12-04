@@ -24,8 +24,9 @@
 
 - no such thing as classes or inheritance in elixir
   - to reuse code:
-  |keyword|purpose|
-  |:---:|:---:|
-  |import|take all the functions out of this module and give them to this other module|
-  |alias|create a shortcut to this other module, my fingers are lazy|
-  |use|I want to do some really really really fancy setup|
+
+    |keyword|purpose|
+    |:---:|:---:|
+    |import|take all the functions out of this module and give them to this other module|
+    |alias|create a shortcut to this other module, my fingers are lazy|
+    |use|I want to do some really really really fancy setup|
