@@ -530,4 +530,100 @@ pp 251-255
 6. remove the subclass
 7. repeat inlining the constructor and eliminating each subclass until they are all gone
 
+### Lazily Initialized Attribute
+pp 255-257
 
+- initialize an attribute on access instead of at construction time
+- makes code more readable because lazily initialized attributes can encapsulate all their initialization logic within the methods
+
+1. move initialization logic to the attribute reader
+
+- typical idiom is to use `||=`, but this doesn't work when `false` or `nil` are valid values for the attribute
+  - in that case use `instance_variable_defined?`
+
+### Eagerly Initialized Attribute
+pp 257-259
+
+- initialize an attribute at construction instead of on first access
+- lazy loaded attributes can change their values on access, eagerly initialized attributes encapsulate all initialization logic in the constructor and return consistent results
+
+1. move initialization logic to the constructor
+
+## Simplifying Conditional Expressions
+
+### Decompose Conditional
+pp 261-264
+
+- extract methods from the `elsif` and `else` branches of a conditional statement
+
+1. extract conditions into methods
+2. extract the branches into methods
+
+### Recompose Conditional
+pp 264-265
+
+- use `||` instead of ternary operator when you're checking for `nil`
+- use guard clauses instead of simple `if/else` statements
+
+### Consolidate Conditional Expression
+pp 265-267
+
+- you have a sequence of conditional tests that all return the same thing
+- use `&&` and `||` then extract a method that explains what you're really looking for and use it
+
+1. check that none of the conditionals has side effects
+2. replace the string of conditionals with a single statement using `&&` and/or `||`s
+3. consider Extract Method on the condition
+
+### Consolidate Duplicate Conditional Fragments
+pp 268-269
+
+- same code appears in all branches of a conditional statement
+- move it outside the conditional statement
+
+1. identify code that is executed the same way regardless of the condition
+2. if the common code is at the beginning, move it to before the conditional, if it's at the end, move it outside after the conditional
+
+### Remove Conditional Flag
+pp 269-274
+
+- a variable is acting as a control flag for a series of boolean expressions
+- use `break` or `return` instead
+
+1. find the value of the control flag that gets you out of the logic statement
+2. replace assignments of the break-out value wtih a `break` or `next` statement
+
+- can also use `return`
+
+### Replace Nested Conditional with Guard Clauses
+pp 274-279
+
+- use when a conditional statement is confusing and does not make the path of execution clear
+- remove all nesting and use guard clauses instead
+
+1. put in a guard clause for each check being done inside a nested conditional
+
+### Replace Conditional with Polymorphism
+pp 279-284
+
+- you have a conditional that chooses different behaviour depending on the type of an object
+- move each leg of the conditional to a method in an object that can be called polymorphically
+
+1. if the conditional is one part of a larger method, take apart the conditional statement and use Extract Method
+2. Move Method if necessary to put the conditional in the right place in the object
+3. create a method on one of the polymorphic objects that will override the conditional statement method
+4. remove the copied leg of the conditional statement
+5. repeat for each leg of the conditional until all legs are turned into polymorphic methods
+
+### Introduce Null Object
+pp 284-292
+
+- you check for `nil`
+- replace `nil` with a null object
+
+1. create the null object class
+2. return this object instead of `nil` wherever `nil` could come up
+3. look for places where you're checking for `nil`
+4. define the method being checked in your null object and remove the check for `nil`
+
+- define `missing?` and switch all the checks for `nil` with this new method as an intermediary step
