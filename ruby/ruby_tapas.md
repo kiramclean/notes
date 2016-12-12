@@ -146,4 +146,50 @@
     - no object version conflicts
     - all available data is there, even the unused parts
     - raw strings are always serializable
-
+67. moneta is an abstraction on top of different types of cache persistence layers that provides the same interface as a hash
+  - build a cache to interface with a hash and moneta can be a drop-in to replace the back-end with a number of different storage options
+68. invert templating control flow so business objects send messages to a renderer that knows how to display things to a user
+  - models don't care about display logic, they just have to implement a `display` method that converts their data into a format a renderer can understand
+  - this `display` method is the only place where business objects and renderers touch, so they can change independently of each other
+  - this is one implementation of the builder pattern
+69. run tests after every single change -- the sooner you get a failing test, the more your code stays based in reality
+70. `break` can halt execution of any method that yields control to a block -- not just `loop`s
+  - still respects `ensure` blocks
+71. `break` can take an argument
+  - this argument becomes the return value of the method being broken out of -- the argument to `break` overrides the normal return value
+  - reads better and allows you to use loop local variables/methods in the break message
+72. ruby's file `#read` can take an argument for the number of bytes to read
+  - `#seek` can begin reading a file at a given point, given a negative number it will read backwards from the given spot
+  - `IO` comes with helper constants `IO::SEEK_CUR` and `IO::SEEK_END` that can help with reading a file relative to the current stop in the file
+73. using `while` as a statement modifier executes the `while` condition first and then the statement code if necessary
+  - adding `while` to modify a `begin` `end` block runs the `while` condition _after_ the block has been run at least once
+    - same behaviour as a `do` `while` loop in other languages
+74. `String#index` gives you the index of the first occurence of the given character
+  - `#rindex` starts from the end of the file and gives you the first occurence of the given character
+  - strings can be sliced with the subscript operator, `[]`
+75. `IO` comes with `#copy_stream` that takes an input and output (both `IO` objects) and efficiently copies data from one to the other, respecting the current offset of the input
+76. nested loops and complicated conditional statements are characteristic of unix C source code, but bad style for ruby
+  - the point of ruby is that it is easy to read
+  - idiomatic ruby has small, descriptive, semantically named methods and few conditional statements
+77. tracking state as a side effect of a method call is a sign you need a new object
+  - avoid verb-y class names that you try to design to perform a process generically
+  - try to model entire domain concepts, not processes
+78. turn a method that yields into an enumerator with `to_enum`, then you can control what it does without loops and temporary variables
+79. array's `+=` creates a new combined array, `concat` is much faster and changes the array in place
+80. splat operator destructures arrays
+  - ruby has multiple assignments
+81. implicit splat only works for arrays that are the only argument
+  - does not work for `Set`s
+  - does not work if the array is the second argument, the whole array just gets assigned to the second variable
+  - single splatted element in a block behaves like a trailing splatted variable in an assignment
+82. use inline assignment to make your code more readable and to contain temp variables to the blocks they're being used in
+83. implicit splat doesn't work for `Struct`s
+  - ruby decides if something is like an `Array` based on whether or not it responds to `.to_ary`
+84. ruby can destructure recursively with splat groups, looks like pattern matching
+85. ruby ignores its ignore rules for the `_` variable name
+  - you can have `_` multiple times, normally ruby will not let you have the same variable name twice in the same scope
+86. `super` implicitly sends along all arguments passed into the method
+  - you can use just `*` if you never intend to use the arguments you are slurping up
+    - instead of `*args`, when you don't need any of the arguments, you can just use the naked splat `*`
+87. extracting a missing domain concept can expose many refactorings
+  - think in simple terms and everyday language to come up with good names
