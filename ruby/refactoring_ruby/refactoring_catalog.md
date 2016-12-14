@@ -629,12 +629,35 @@ pp 284-292
 - define `missing?` and switch all the checks for `nil` with this new method as an intermediary step
 
 ### Introduce Assertion
-pp 292-
+pp 292-295
 
 - a piece of code is assuming something about the current state of the program
 - make the assumption explicit with an assertion
 
 1. when you see a condition that is assumed to be true, explicitly assert it instead
 
+- avoid doing this in production because it is slow, set up to only evaluate in dev
 
+## Making Method Calls Simpler
 
+- be careful replacing parameter lists with with objects, unless they are immutable
+- be diligent about clearly separating methods that change state and methods that query state
+- all data should be hidden
+- interfaces should be as minimal as possible
+
+### Rename Method
+pp 298-300
+
+- a method name does not reveal its purpose
+- code is for humans first, computers second
+
+1. check to see whether the method signature is implemented by any sub- or super-classes, if it is, change those too
+2. declare a new method with the new name
+3. copy the old method code into the new method and make it work
+4. change the old method to just call the new method
+5. find all references to the old method name and change them to refer to the new method name
+6. remove the old method
+  - if you can't, mark it as deprecated and add a warning for a future release
+
+### Add Parameter
+pp 300-
