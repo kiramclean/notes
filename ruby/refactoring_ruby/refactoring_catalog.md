@@ -627,3 +627,14 @@ pp 284-292
 4. define the method being checked in your null object and remove the check for `nil`
 
 - define `missing?` and switch all the checks for `nil` with this new method as an intermediary step
+
+### Introduce Assertion
+pp 292-
+
+- a piece of code is assuming something about the current state of the program
+- make the assumption explicit with an assertion
+
+1. when you see a condition that is assumed to be true, explicitly assert it instead
+
+
+

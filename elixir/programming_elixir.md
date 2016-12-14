@@ -35,3 +35,11 @@ _Dave Thomas_
 - have access to all `Keyword` and `Enum` module methods
 
 
+## Processing Collections - Enum and Stream
+- `Stream` is like enum but lazy
+  - like a ruby `Enumerator`
+- use to defer processing until you need data, or to deal wtih enumerating huge collections
+
+
+
+
