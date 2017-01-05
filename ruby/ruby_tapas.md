@@ -193,3 +193,9 @@
     - instead of `*args`, when you don't need any of the arguments, you can just use the naked splat `*`
 87. extracting a missing domain concept can expose many refactorings
   - think in simple terms and everyday language to come up with good names
+
+
+346. user classes tend to really do nothing except map a set of credentials to a set of roles or permissions
+  - you do not need to model your objects in an OO program after actual objects in the real world
+  - programs never actually interact with the user, they interact with clients
+  - name your classes after the relationships an concepts they represent, not after real objects in real life

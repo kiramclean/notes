@@ -660,4 +660,135 @@ pp 298-300
   - if you can't, mark it as deprecated and add a warning for a future release
 
 ### Add Parameter
-pp 300-
+pp 300-302
+
+- a method needs more information from its caller
+- consider carefully whether you need this
+  - can an object you're already passing get the relevant information?
+  - should the behaviour be on another object?
+  - are there any data clumps in your params?
+
+1. check whether the method signature is implemented anywhere else
+2. declare a new method with the added parameter
+3. change the body of the old method so it calls the new one
+4. find all references to the old method and change them to refer to the new one
+5. remove the old method
+
+### Remove Parameter
+pp 302-303
+
+- a method is no longer using one of the parameters it is being given
+- a parameter indicated necessary information; if it's unnecessary, remove it
+
+1. check whether the method signature is implemented anywhere else
+2. declare a new method without the parameter and copy the old method body into it
+3. change the body of the old method to call the new one
+4. find all references to the old method and change them to refer to the new one
+5. remove the old method
+6. rename the new method to make it the old method's name
+
+### Separate Query from Modifier
+pp 303-307
+
+- a method returns a value and changes the state of an object
+- create two methods for the different responsibilities
+- clearly signal the difference between methods with side effects and methods without
+- any method whose return value is intended to be used by the caller should have no side effects
+
+1. create a query that returns the same value as the original method
+2. modify the original method so it returns only the result of calling the new query method
+3. for each caller, add to the single call to the original method a call to the new query method
+4. remove the return expressions from the original method
+
+- for ruby or other languages with bad concurrency models, create one `query_and_modify` method that calls two separate `query` and `modify` methods, so that the code is executed synchronously in the right order
+
+### Parameterize Method
+pp 307-310
+
+- several methods do simliar things but just with different values in the method body
+- extract the different part into a parameter and make a method that takes an argument
+
+1. create a parameterized method that can be substituted for each repetitive method
+2. replace one old method with a call to the new one
+3. repeat for all the methods
+
+### Replace Parameter with Explicit Methods
+pp 310-313
+
+- code runs differently depending on the value of an enumerated parameter
+- create a separate method for each value of the parameter
+- do this if you see conditional checks on a method param inside of a method
+
+1. create an explicit method for each value of the parameter
+2. for each leg of the conditional, call the appropriate new method
+3. replace each caller of the conditional method with a call to the appropriate new method
+4. when all callers are changed, remove the conditional method
+
+### Preserve Whole Object
+pp 313-317
+
+- you get several values from an object and pass them as parameters in a method call
+- send the whole object along instead of breaking it up into parameters
+- this makes it difficult to change all the calls to that method that takes a ton of params later
+
+1. create a new parameter for the whole object from which the data comes
+2. determine which parameters should be obtained from the whole object
+3. take one parameter and replace references to it within the method body by invoking an appropriate method on the whole object parameter
+4. delete the parameter
+5. repeat for each parameter that is now on the whole object
+6. remove code in the calling method that gets the deleted parameter
+
+### Replace Parameter with Method
+pp 317-320
+
+- an object invokes a method, then passes the result as a parameter for a method
+- just let the receiver invoke the method and remove the parameter
+- reducing the length of parameter lists is good, so if a method can get a value it needs in another way than as a parameter, it should
+
+1. extract any calculation of the parameter into a method
+2. replace references to the parameter in method modies with references to the new method
+3. use remove parameter on the parameter
+
+### Introduce Parameter Object
+pp 320-324
+
+- you have a group of parameters that naturally go together
+- replace them with an object
+
+1. create a new class to represent the group of parameters you are replacing and make it immutable
+2. use add parameter for the new data clump and give it a default value
+3. for each parameter in the data clump, remove the parameter from the signature
+4. modify the callers and method body to use the parameter object for that value
+5. when you have removed the parameters, look for behaviour that you can move into the parameter object with move method
+6. remove the default value for the new parameter because this new method should never be used without the parameter
+
+### Remove Setting Method
+pp 324-327
+
+- a field should be set at creation time and never altered
+- remove all setting methods for that field
+- exposing a setting method indicates that a field can be changed
+- if it shouldn't be changed, remove the setter method
+
+1. check that the setting method is only used in the constructor
+2. modify the constructor to access the variables directly
+3. remove the setting method
+
+### Hide Method
+pp 327-328
+
+- any method that is not being used by any other class should be private
+
+1. check regularly for opportunities to make a method more private
+2. make every method as private as you can
+
+### Replace Constructor with Factory Method
+pp 328-
+
+- when an object requires more than simple constructor, move initialization to a factory method
+- prevents duplication of initialization logic
+- encapsulates knowledge of an object's attributes into the object itself
+
+1. do Extract Method to isolate construction logic
+2. Move Method to the desired object if you have to
+3. remove the original constructor
