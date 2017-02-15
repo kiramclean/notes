@@ -29,3 +29,19 @@ Must be:
   - if someone knows the output they're looking for and finds part of the input, they shouldn't be able to find the rest of the input they need to crack the hash
   - given a puzzle id `id` from a high min-entropy distribution and a target `Y`, find a solution `x` such that `H(id|x) belongs to the set Y`
     - if the hash is puzzle-friendly, it means there should be no strategy for solving this than trying random values of x
+    
+## Hash pointers
+- tell you where something is, but also whether it changed or not
+- used to build data structures
+  - can be used for tamper-evident logs
+  - each block includes data and a hash pointer to the previous block
+  - can't tamper with a linked-list built with hash pointers because eventually you would have to tamper with the genesis hash
+  
+### Merkle trees
+- only need to remember the root hash (256 bits) to hold many items that can't be tampered with without us knowing about it
+- can verify membership in the tree in `O(log n)` time and space
+- has a sorted variant (data at the bottom of the tree is sorted) and can prove *non*-membership in this in `O(log n)` time and space
+
+- can use hash pointers ina ny pointer-based data structures that has no cycle
+  - there has to be some item in the struture that has no pointers coming out of it so we can work backwards
+ 
