@@ -45,3 +45,21 @@ Must be:
 - can use hash pointers ina ny pointer-based data structures that has no cycle
   - there has to be some item in the struture that has no pointers coming out of it so we can work backwards
  
+## Digital signatures
+- only you can sign, but anyone can verify
+- tied to a specific document
+- requires three operations:
+  - generate keys (secret key and public key that go together)
+    - only the person with the secret key can make signatures
+  - sign (secret key and a message)
+  - verify (public key, message, and signature)
+    - always deterministic, the other two are randomized algorithms (need a true source or randomness)
+- there's a limit to the message size in principle, so we hash the message first and use the hash
+  - you can also sign a hash pointer
+  - if you sign a hash pointer, the signature applies to the entire data structure underneath that pointer
+  
+  
+    
+    
+  
+  
