@@ -23,3 +23,15 @@
 
 - that (☝️️) only works on a single boolean value or bit
 - a bitwise XOR operator performs XOR on each bit in a value
+
+## One-time pads
+
+- perfectly secure if the pad is truly random
+- can only be used once
+- multi-time pads are vulnerable to crib-dragging
+  - looking for small sequences expected to occur with high probability
+  - XOR-ing two encrypted texts can tell you a lot about the plain text
+- very impractical
+- for the key to work it would have to be at least as large as all the information you are transmitting put together
+- you would have to transmit those keys securely to all the people you want to communicate with in advance
+- generating truly random keys is hard and time consuming
