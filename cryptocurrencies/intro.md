@@ -29,14 +29,14 @@ Must be:
   - if someone knows the output they're looking for and finds part of the input, they shouldn't be able to find the rest of the input they need to crack the hash
   - given a puzzle id `id` from a high min-entropy distribution and a target `Y`, find a solution `x` such that `H(id|x) belongs to the set Y`
     - if the hash is puzzle-friendly, it means there should be no strategy for solving this than trying random values of x
-    
+
 ## Hash pointers
 - tell you where something is, but also whether it changed or not
 - used to build data structures
   - can be used for tamper-evident logs
   - each block includes data and a hash pointer to the previous block
   - can't tamper with a linked-list built with hash pointers because eventually you would have to tamper with the genesis hash
-  
+
 ### Merkle trees
 - only need to remember the root hash (256 bits) to hold many items that can't be tampered with without us knowing about it
 - can verify membership in the tree in `O(log n)` time and space
@@ -44,7 +44,7 @@ Must be:
 
 - can use hash pointers ina ny pointer-based data structures that has no cycle
   - there has to be some item in the struture that has no pointers coming out of it so we can work backwards
- 
+
 ## Digital signatures
 - only you can sign, but anyone can verify
 - tied to a specific document
@@ -57,9 +57,40 @@ Must be:
 - there's a limit to the message size in principle, so we hash the message first and use the hash
   - you can also sign a hash pointer
   - if you sign a hash pointer, the signature applies to the entire data structure underneath that pointer
-  
-  
-    
-    
-  
-  
+
+## A simplified cryptocurrency
+
+### Goofycoin
+
+A couple of rules for the simplest cryptocurrency:
+  1. goofy can create new coins (signed by goofy's key with a unique coin id) which are owned by him
+    - anyone can verify that the signature on the coin is valid with the public key
+  2. anyone who owns a coin can spend it (give it to someone else)
+    - goofy has to sign any transactions that spend the coin
+
+  - the same coin could be signed to two different people without the other knowing (double spending attack)
+
+- main problem facing cryptocurrencies is the double spending attack
+
+### Scroogecoin
+
+- scrooge publishes a history of all transactions (a block chain, signed by scrooge)
+  - each block has one transaction in it and a pointer to the previous block in the history
+- anyone can verify that scrooge signed the hash pointer and then follow the chain backwards to see the entire history
+- this signed history protects against double spending
+  - if a coin is used, anyone can look into the history and check whether that coin was already spent or not
+
+- paycoins transaction: consumes and destroys some coins and creates new coins of the same total value
+  - valid in scroogecoin if:
+    - consumed coins are valid
+    - the coins were not already consumed (not a double spend)
+    - total value out == total value in
+    - signed by owners of all consumed coins
+
+- coins are immutable (can only be created or consumed)
+  - can acheive the effect of transferring, subdividing, or combining coins by using transactions
+
+- scroogecoin depends on scrooge being honest -- too centralized
+  - need to decentralize the currency to have no central trusted authority
+  - people need to agree upon a single block chain history
+  - also need to assign valid/unique ids
