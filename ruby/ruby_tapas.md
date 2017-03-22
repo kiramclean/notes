@@ -193,6 +193,13 @@
     - instead of `*args`, when you don't need any of the arguments, you can just use the naked splat `*`
 87. extracting a missing domain concept can expose many refactorings
   - think in simple terms and everyday language to come up with good names
+88. testing with multiple processes is brittle
+  - can use webmock to direct http requests to any rack app to stub network requests in a realistic way that still fully tests both ends
+89. beware of coincidental duplication (as opposed to true duplication of knowledge)
+  - just because two things appear to be duplicates initially, it doesn't mean they really are
+  - don't get too attached to old decisions and consider that you may have combined too many things together when previosuly DRYing out your code
+90. in ruby, classes are objects, too, and inside a class declaration the `self` object is the class currently being defined
+  - doing `class << self` opens up a window into the class object's singleton class, but can be easier to lose track of
 
 
 346. user classes tend to really do nothing except map a set of credentials to a set of roles or permissions
