@@ -142,21 +142,121 @@ Stateful apps communicating over a stateless protocol
 
 - Send jobs to background workers and poll them for the result (**separate processes**)
 
-^ Sometimes this is overkill for something that is slow enough to be a pain but not quite slow enough to be worth running in a se
+^ Sometimes this is overkill for something that is slow enough to be a pain but not quite slow enough to be worth running in a background job
 
 - Send tasks to an event loop with functions that run on completion/failure (**separate threads**)
 
-^ This forces you to write your code in a convoluted callback style way
+^ This forces you to write your code in a convoluted callback style
 
 ---
 
-# Concurrency in Elixir
+# Doing a Lot of Work
+
+```ruby
+# in an exports controller
+
+def create
+  parse_some_incoming_params
+  fetch_the_data_to_export_from_db
+  update_some_flag_on_those_models_in_our_db
+  convert_the_data_to_a_readable_format # CSV, JSON etc.
+  write_that_data_to_a_file
+  put_the_file_somewhere_a_user_can_download_it
+end
+```
+
+---
+
+![inline](turtle.jpg)
+
+# [fit] Too slow!
+
+^ This is not a reasonable amount of time to wait for web request
+
+---
+
+## Typical Web App
+### Run in a separate process
+
+```ruby
+def create
+  export_job_params = parse_some_incoming_params
+  # send to a separate worker process to handle all this
+  SlowExportJob.perform(export_job_params)
+end
+```
+
+- Now you have to poll that job to see what it's doing
+_either use fancy javascript or require a page reload_
+- Requires separate queue
+
+---
+
+# With Phoenix
+
+^ GenStage to manage how much work your process can handle?
+^ Do these things in a supervised task?
+
+---
+
+# Calling Multiple Slow APIs
+
+```ruby
+# in a dashboard controller
+
+def show
+  lookup_a_record_in_our_db
+  fetch_some_things_from_github
+  fetch_some_things_from_twitter
+  fetch_some_things_from_youtube
+end
+```
+
+---
+
+No need to wait!
+But each of those requests is blocking the controller from continuing.
+- Can wrap them in threads, or if this was JS they would be running async
+- But then you have to wait for each to finish and handle callbacks coming in in an unpredictable order
+- This leads to code that is annoying to maintain and hard to debug
+
+---
+
+# Elixr Handles Async Messages
 
 - Spawn processes freely and let Erlang worry about it 
 
+`spawn/3`
+`Task.async`
+
+- Phoenix controller actions are already processes
+
+^ Think about coupling between controller actions and the processes spawned from them.
+
+---
+
+# Maintaining a Connection
+
+- Instead of using javascript or requiring a page reload to update your UI, you can keep a websocket open to the client
+- Most frameworks can't handle many open sockets at the same time without really impacting performance (dozens vs. hundreds of thousands of users on the same hardware)
+
+^ Other web sockets implementations reply on redis or some other storage for PubSub tracking, so this will always be a bottleneck (have to worry about redis locking, can't reliably have multiple redis servers running at the same time)
+
+---
+
+# Phoenix Channels
+
 ```elixir
- 
+
 ```
+
+---
+
+# In Phoenix
+
+def export
+
+end
 
 ---
 
@@ -234,7 +334,7 @@ Request --> Router --> Your App --> Response
 
 ---
 
-Erlang Term Storage
+# Erlang Term Storage
 
 - Constant-time in-memory tuple store
 - Comes with Erlang
@@ -260,27 +360,58 @@ iex(3)> :ets.lookup(:fancy_erlang_cache, "cache key")
 
 ^ Compare the stack you needed to get your full-scale web app up and running before and after phoenix
 
-Requirement | Without Elixir | With Elixir
+Requirement | Ruby | Elixir
 ---|---|---
-HTTP server | Nginx | Elixir
-Request Processing | Ruby on Rails | Elixir
-Long-running requests | ActionCable (Ruby) | Phoenix Channels (Elixir)
-Server-wide state | Redis | Elixir
-Background jobs | Resque/Sidekiq | Elixir
-Scheduled jobs | Cron | Elixir
-Crash recovery | Upstart | Erlang
+App server | Puma/Unicorn | BEAM
+HTTP Server | Nginx | BEAM
+Long-running requests | ActionCable (Ruby) | Phoenix Channels (BEAM)
+Server-wide state | Redis | BEAM
+Background jobs | Sidekiq/Resque | BEAM
+Scheduled jobs | Cron | BEAM
+Low-level caching | Memcached | ETS (BEAM)
+Crash recovery | Monit/God/Foreman | BEAM
+
+^ Some frameworks can only handle one request at a time and spinning up new processes is not trivial, so you need tools to spin up multiple app servers (Unicorn) or a multi-threaded app server (Puma)
+
+^ If you have multiple app servers running you need a web server in front of them to hand off requests (Nginx)
+
+^ Slow background jobs block web requests, so they need to be sent to a background worker
+
+^ Current implementations of web sockets are not performant enough to be relevant
+
+^ Can't keep app servers up consistently to run scheudled jobs, so we add cron
+
+^ No built-in tools to monitor all these moving parts, so we add more dependencies to monitor them (Monit, God, Foreman)
 
 ---
 
-Bonuses with Phoenix
+# Bonuses with Phoenix
 
 - Very fast
+
+^ Server-side rendering is so much faster because Erlang is really fast at string IO. It doesn't render a separate copy of each web page in memory for each client, it contructs pointers to the same pieces of immutable memory across requests.
 
 ^ It's not just better for your users, it makes for a much more pleasant development environment. Booting the app takes no time, so normal things that require booting the app (like running tests, migrating the db, booting a local server) are way faster, too. This is important.. I don't know about other languages but on the rails apps I've worked on nobody ever runs the whole test suite locally because it takes forever (just runs on CI).
 
 - Great dev tools
 
 ^ You get live reloading built-in, proper front-end tooling (can also swap for anything that can compile your front-end code into a `static/` folder)
+
+---
+
+# Downsides
+
+- Less library support
+- Fewer external services like error monitoring, but Erlang has a lot of stuff built in
+
+---
+
+# Consider Phoenix For:
+- high throughput
+- fast and consistent response times
+- minimal (ms/year) downtime
+- realtime updates
+- bi-directional realtime communication
 
 ---
 
