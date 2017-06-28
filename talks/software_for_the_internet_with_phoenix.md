@@ -19,20 +19,17 @@
 - Former researcher, painter, translator
 
 - Programmer for the web (Ruby, JS)
+<br>
 
-![inline](pitonneux.jpg)
+![inline](sama.png) ![inline](pitonneux.jpg) ![inline](ruby.png) ![inline](js.png)
 
 ---
 
 Elixir → language
 
-![inline, 40%, right](elixir.png) 
-
 ^ Elixir is a functional programming language that runs on the Erlang VM. It first appeared in 2011 and v1 was released in 2014. It was developed by Jose Valim, a rails core contributor, alledgedly out of his frustrations trying to make ruby apps concurrent.
 
 Erlang → also language, has own VM
-
-![inline, right](phoenix.png)
 
 ^ Elixir compiles to Erlang byte code and runs on the Erlang VM (the BEAM). Erlang is a functional language developed in the 80s by Ericsson for use in the telecom industry.
 
@@ -46,6 +43,7 @@ Phoenix → web framework
 
 ^ It's also supported on many platform-as-a-service providers, like Heroku, Engine Yard, Digital Ocean, you can also deploy a container to AWS or or Google Container Engine, so there are apps running this in production.
 
+![inline, 60%](elixir.png) ![inline, 90%](erlang.png) ![inline](phoenix.png) 
 
 ---
 
@@ -53,32 +51,15 @@ Phoenix → web framework
 
 ^ I'm a web developer. I do mostly Ruby on Rails, also front-end stuff with different JavaScript frameworks. I haven't been doing it for that long, but I noticed that you quickly start to run to the same problems over and over again. 
 
+^ Usually you don't run into problems until a lot of people start using your app at the same time. It's pretty easy to build something that will work for one person at a time, or for many people who always see the same thing, but that's not really useful.
+
 ^ There are some fundamental challenges in web development because of the nature of the internet and user expectations. There are some problems that are common to most web development frameworks out there, and Phoenix was built in some ways to address some of these problems. It's able to offer some unique solutions to these problems because of the Elixir language and the underlying Erlang VM. 
 
 ---
 
-# The Hard Part
+# Lots of Choices
 
-- Many people asking for many things at the same time
-- One machine trying to handle it all
-- Or, many machines trying to keep in sync so the same thing doesn't get handled multiple times (or not at all)
-
----
-
-## Fundamental Problem
-
-
-# Stateful apps communicating over a stateless protocol
-
-^ HTTP is a stateless protcol, but people expect a stateful experience. That means that everytime you make an HTTP request, you have to send all the data required to fulfill the request. The server doesn't remember anything about the last time you asked it for something. It's like it's the first time it's ever heard about you every time.
-
-^ We store state in databases and cookies to simulate a stateful experience for the user, but this makes providing a consistent experience to many users of a web app at the same time complicated. Showing the same thing to everyone all the time (putting static content on the web) is easy and easy to scale. The problems I'll talk about are specific to dynamic web apps, like websites you can interact with.
-
----
-
-# Different Options
-
-^ There are a lot of frameworks out there that address this problem in different ways, and which one is best depends on your domain and your specific problems.
+^ There are a lot of frameworks out there that address these problems in different ways, and which one is best depends on your domain and your specific problems.
 
 - How much traffic?
 
@@ -90,7 +71,7 @@ Phoenix → web framework
 
 - What kind of data?
   
-^ Are you storing/fetching user inputted data? Does the data change a lot or will it be mostly static once it's there? Maybe you don't even need a database.
+^ Are you storing/fetching user inputted data? Does the data change a lot or will it be mostly static once it's there?
 
 - Which clients/platforms?
 
@@ -103,10 +84,96 @@ Phoenix → web framework
 - How good are you at dev ops?
 
 ^ production engineering/systems engineering/site reliability/whatever else it's called
-^ Can you take your app offline for maintenance? Or does it have to be up 100% of the time.
+
+^ Can you take your app offline for maintenance? Or does it have to be up 100% of the time?
+
 ^ Some types of apps and architectures are easier to deploy than others. Think about how you will get your app onto the real internet before you build it, if the intention is eventually to run it there. Also think about the cost of your infratructure before you deploy.
 
 ^ Regardless of what solution you choose, there are things you will eventually have to deal with in your web app, so we'll look at few solutions and see how they're implemented with Elixir vs. with other languages.
+
+---
+
+# The Hard Part
+
+- Many people asking for many things from different places at the same time
+
+^ Building a web app for a few users is pretty easy. It's common to run into problems when you try to scale your web app. When a lot of people are asking for the same thing, you have to make sure to show them an accurate version of the thing and the one they're expecting.
+
+- One machine trying to handle it all
+    _(Or, many machines trying to keep in sync so the same thing doesn't get handled multiple times -- or not at all_
+
+- Everyone expecting their request to work
+
+^ For most use cases you want your requests to all go through. This means you have to build in mechanisms to handle failures and errors in your app. Ideally you want your users to see the thing they asked for, every time.
+
+^ Existing frameworks are really good at building usable, friendly UIs quickly, but these days most of our time as web developers is spent building the non-CRUD-y parts of web apps. Real businesses are being run on the internet and web apps are doing some real heavy lifting. Frameworks originally designed to make it easy to build web interfaces to a database sometimes struggle to meet more intense business requirements.
+
+---
+
+# Fundamental Problem
+
+Stateful apps communicating over a stateless protocol
+
+^ HTTP is a stateless protcol, but people expect a stateful experience. That means that everytime you make an HTTP request, you have to send all the data required to fulfill the request. The server doesn't remember anything about the last time you asked it for something. It's like it's the first time it's ever heard about you every time.
+
+^ We store state in databases and transmit it with cookies to simulate a stateful experience for the user, but this makes providing a consistent experience to many users of a web app at the same time complicated. 
+
+^ Showing the same thing to everyone all the time (putting static content on the web) is easy and easy to scale. The problems I'll talk about are specific to dynamic web apps, like websites you can interact with.
+
+---
+
+# To Deal With It
+
+- Do a lot of things at the same time (**async or concurrent execution**)
+
+^ We can offload state to a DB to solve some of our problems, but that means you're constantly querying the DB for information. These days you might also fetch data in real time from an external service, or query an internal microservice (like fancy data science stuff).
+
+^ If you go down this path (doing many things at the same time) you have to make your code handle asynchronous execution. You will want to do some things things that take longer than others, and if you're running all the requests in the order they come in, you'll end up with something fast stuck behind something slow, which will jam up your app
+
+- Remember the last thing you did so you don't have to do so many things for each request (**stateful web servers**)
+
+^ To make this approach work, you need a persistent connection to your client. For the web, this means using websockets. Having a connection to each client requires you keep the state of each connection in memory, which can consume a lot of system resources if you have a lot of connected clients at once. Most frameworks can't handle enough connections to do anything interesting.
+
+^ At first you might be able to just use a bigger machines, but CPU processors aren't getting much faster anymore so eventually this will mean using a machine with more cores. For that to make any difference your code has to be able to use multiple cores.
+
+---
+
+# Handling Many Things at Once
+
+- Send jobs to background workers and poll them for the result (**separate processes**)
+
+^ Sometimes this is overkill for something that is slow enough to be a pain but not quite slow enough to be worth running in a se
+
+- Send tasks to an event loop with functions that run on completion/failure (**separate threads**)
+
+^ This forces you to write your code in a convoluted callback style way
+
+---
+
+# Concurrency in Elixir
+
+- Spawn processes freely and let Erlang worry about it 
+
+```elixir
+ 
+```
+
+---
+
+# Slow Requests
+
+- Don't want to block your app by running a network request to an outside API
+- Move pieces of your UI to separate endpoints that are fetched with AJAX, then use JS to put them into the DOM once the request comes back
+
+- Run slow things in a background job, poll it to check status
+- Can use a multi-threaded server to handle concurrent requests, but those can require a lot of system resources (e.g. in Ruby a thread requires a separate OS process)
+- Also, you're doing this high in the middleware stack, interfacing directly with your web server's async rack layer, so you lose any middleware included by your framework! (like session management)
+- You're handling the async stuff before the request gets into your framework code, let alone your app code
+- All your threads die when restarting the main process
+
+---
+
+
 
 ---
 
@@ -144,10 +211,6 @@ Request --> Router --> Your App --> Response
 ^ Data is always copied between processes (cheap on the BEAM), so you are not sharing memory between Erlang processes
 ^ It's best practice in OO languages to communicate between objects only by sending messages between them and not editing other objects' data directly, but there's nothing actually stopping you from doing it and it inevitably happens. In Elixir the ONLY wya to communicate bewteen processes is by sending messages between them, and those messages can be async.
 
----
-
-# With Phoenix
-
 
 
 ---
@@ -155,38 +218,99 @@ Request --> Router --> Your App --> Response
 - Don't want to block the response waiting for something slow
     + fetching data from an external API
     + doing an expensive calculation
-    + 
+    + even loading a ton of stuff from a db
 
 ^ It's common in your web app to have some requests that are slow or unpredicatable 
 
 ---
 
+# Caching
+
+- Don't need to cache your own things, phoenix is fast enough
+
+^ You can get rid of fragment caching or the other types of caching where you cache things generated by your own server. Phoenix serves them fast enough that those strategies are unecessary. 
+
+- If you do want to cache data (to avoid a DB or an external API or something), OTP has you covered
 
 ---
 
-# Problems to deal with
+Erlang Term Storage
 
+- Constant-time in-memory tuple store
+- Comes with Erlang
 
+^ A super efficient, built-in in-memory store. Lives in a process, so when that process dies you lose the table, which you can prevent by supervising the process and backing up the data
+
+<br>
+
+```elixir
+iex(1)> :ets.new(:fancy_erlang_cache, [:set, :private, :named_table])
+:fancy_erlang_cache
+iex(2)> :ets.insert(:fancy_erlang_cache, {"cache key", "some value"})
+true
+iex(3)> :ets.lookup(:fancy_erlang_cache, "cache key")
+[{"cache key", "some value"}]
+```
+
+^ Might want to cache external API responses
 
 ---
 
-One Problem, Many Solutions
+# Before and After
 
-- Stateful server
-- Asynchronous requests
-- 
+^ Compare the stack you needed to get your full-scale web app up and running before and after phoenix
 
-Plan : PROBLEM -> SOLUTION -> EXAMPLE
-
---- 
-
-> **Concurrency**
+Requirement | Without Elixir | With Elixir
+---|---|---
+HTTP server | Nginx | Elixir
+Request Processing | Ruby on Rails | Elixir
+Long-running requests | ActionCable (Ruby) | Phoenix Channels (Elixir)
+Server-wide state | Redis | Elixir
+Background jobs | Resque/Sidekiq | Elixir
+Scheduled jobs | Cron | Elixir
+Crash recovery | Upstart | Erlang
 
 ---
 
-There are a few problems in web development that keep coming up, regardless of the framework you use. There are a few fundamental problems in web development that we have to work around to create any sort of app that anyone would actually want to use.
+Bonuses with Phoenix
 
-To see what the problems are, think about a typical web app and the experience you expect vs. the architecture of the internet.
+- Very fast
 
-Look at the common solutions to these problems, then how Phoenix handles them.
+^ It's not just better for your users, it makes for a much more pleasant development environment. Booting the app takes no time, so normal things that require booting the app (like running tests, migrating the db, booting a local server) are way faster, too. This is important.. I don't know about other languages but on the rails apps I've worked on nobody ever runs the whole test suite locally because it takes forever (just runs on CI).
+
+- Great dev tools
+
+^ You get live reloading built-in, proper front-end tooling (can also swap for anything that can compile your front-end code into a `static/` folder)
+
+---
+
+# For More
+
+ETS: [https://elixirschool.com/lessons/specifics/ets/](https://elixirschool.com/lessons/specifics/ets/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
