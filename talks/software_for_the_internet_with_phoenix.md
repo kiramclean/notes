@@ -112,25 +112,28 @@ Phoenix → web framework
 
 ---
 
-# Common Features
+# Common Challenges
 
-- Slow requests are handled in a way that doesn't block the app for everyone else and makes sense for the current user
+^ These are 5 key requirements of modern web apps
+
+1. Slow requests are handled in a way that doesn't block the app for everyone else and makes sense for the current user
+
+2. Multiple users can access the same data at the same time in a safe way
+
+3. Errors are handled in a minimally invasive way
+
+4. Can store the result of expensive or rate-limited requests
+
+5. Can run regularly scheduled background tasks
+
 
 ^ If someone has to do a big import or export, or render a complicated dashboard, or something else that's slow, the app should not be affected for other users. Also even for that user the UI should make sense, showing them some indication of the progress or status
 
-- Multiple users can access the same data at the same time in a safe way
-
 ^ The app has to be able to handle multiple users trying to access the same resource at a time, or even a single user sending multiple updates for the same resource at a time
-
-- Errors are handled in a minimally invasive way
 
 ^ In a way that minimizes the effect for the user and is helpful for developers
 
-- Can store the result of expensive or rate-limited requests
-
 ^ Some caching is a result of bad performance and is used to reduce the resources required to fulfill a request, but other types of caching are useful and required even in super-performant web apps. Say you're fetching data from an external API, you don't want all your users hitting the external API everytime someone asks for it. You cache the result of the external request.
-
-- Can run regularly scheduled background tasks
 
 ^ Every web app I've seen has some task it runs on a regular basis. Things that need to happen but it doesn't matter at precisely what time, like sending out reminder emails, updating something or deleting certain records that are in a particular state (like a 30-day soft-delete, building big reports/metrics, archiving inactive records) etc.
 
@@ -162,6 +165,9 @@ _With Phoenix:_ Elixir processes (GenServer, GenStage)
 ---
 
 # Doing Too Much Work
+
+- TODO: slow import of big product list
+- populating product catalog
 
 ```ruby
 # in an exports controller
@@ -251,6 +257,8 @@ list_images_for_compression
 
 # Waiting on External APIs
 
+- TODO: shipping rates, payment gateways
+
 _Without Phoenix:_ Each slow call blocks the request from finishing 
 _With Phoenix_: Can launch many requests at a time
 
@@ -286,7 +294,9 @@ end
 
 ### Typical Web App
 
-# Async Requests in an Event Loop
+# Async Requests
+
+-  run in an event loop
 
 ```[.highlight: 1, 4, 16, 23-24] js
 let xmlRequest = new XMLHttpRequest()
@@ -375,6 +385,8 @@ children = [
 
 # Rendering a Big Payload
 
+- rendering a page with a lot of content (catalog page indexes, caching product images)
+
 _Without Phoenix:_ Many different levels of caching
 
 ^ Page caching for requests that don't need even need to go through your app stack (means you probably don't get authentication or other things that are handled before your app actually processes the request), action caching (need to go through your app stack but are the same for many users), fragment caching (parts of a web page that are customized per user), Russian doll caching (caching fragments inside of fragments)
@@ -390,6 +402,8 @@ _With Phoenix_: App performance is not a concern
 ### Race Conditions and Invalid Data Because of:
 
 # Shared Data Access
+
+EXAMPLE: inventory management -- make sure you're not overselling 
 
 _Without Phoenix:_ Manual locking at the app level
 _With Phoenix_: Erlang processes do not share memory
@@ -595,6 +609,11 @@ iex(3)> :ets.lookup(:fancy_erlang_cache, "cache key")
 _Without Phoenix:_ Cron hooked up to your background job queue
 _With Phoenix_: `GenServer` + `Process.send_after/3`, or erlang cron-like library
 
+TODO: Releasing inventory in carts
+
+** The Mailbox for a process acts as a transaction
+
+
 ---
 
 ```[.highlight: 1, 11, 17, 21-23, 26, 28] elixir
@@ -694,16 +713,21 @@ Crash recovery | Monit/God/Foreman | BEAM
 
 ^ Elixir can truly take advantage of the multiple cores of your machine. Also OTP makes running your app(s) across multiple machines easy. So you can scale horizontally and vertically.
 
-- Easy to deploy
-
-^ You can edit code and recompile the app while the VM is running (no restarts!)
-
 ---
 
 # Downsides
 
-- Less library support
 - Fewer external services like error monitoring, but Erlang has a lot of stuff built in
+
+- Less library support (can use erlang libraries)
+
+- Deployments
+
+^ What happens to running processes? Have to think about finishing running processes
+
+^ Erlang 20 supports responding to sigterm, so you can have a clean shutdown of the VM
+
+^ Have to think about deployments more
 
 ---
 
