@@ -1,5 +1,6 @@
-# Programming Elixir
-_Dave Thomas_
+# Elixir Basics
+
+_From Programming Elixir, by Dave Thomas_
 
 - `and`, `or`, `not` expect literally `true` or `false`
 - `&&`, `||`, `!` can take something that is just _truthy_ .. doesn't have to be exactly `true` or `false`
@@ -41,5 +42,7 @@ _Dave Thomas_
 - use to defer processing until you need data, or to deal wtih enumerating huge collections
 
 
+_From Function Web Development by Lance Halvorsen_
 
-
+- Structs are like maps but have compile time checks on the keys and runtime
+  checks on the type
