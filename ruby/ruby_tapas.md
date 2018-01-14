@@ -344,7 +344,32 @@ object is the class currently being defined
       can't access private methods or instance variables)
   - in ruby 2.x methods defined in a module can be re-bound to any object in the
     system (doesn't have to be of the same class)
-
+92. don't over-dry your code if it means using over-genericized names that
+    nobody would actually use in your domain
+93. there is no `BooleanClass` in ruby because there is no need to ever
+    explicitly declare what type of argument something will be
+    - the only shared methods between `TrueClass` and `FalseClass` (`:&`, `:|`,
+      `:^`) behave differently for each class -- the only things they ahve in
+      common are things they have in common with all objects
+94. use `!!` to convert anything to an explicit boolean
+99. string subscript operator can take an optional second argument to say which
+    match group to return
+100. a gateway class knows about an external service and _its_ domain model, but
+     does not translate between that domain model and your own
+101. use short methods with clear names to explain what you're doing (rather
+     than comments)
+104. `DateTime._strptime` returns a hash of parsed time parts
+105. ruby `$stdout.tty?` will return true if the current standard output is a
+     terminal
+106. `class << self` opens up the class' singleton class
+107. ruby string subscript assignment supports regex groups, named groups, and
+     assignment to those groups
+108. `nil` means many things in ruby, but the meaning is always contextual
+  - many many things return `nil` in ruby
+109. Nokogiri SAX parser can take a custom parser that does what it wants in
+     response to events
+  - model for streaming content: emit an event whenever a relevant node is
+    reached
 
 346. user classes tend to really do nothing except map a set of credentials to a
 set of roles or permissions
