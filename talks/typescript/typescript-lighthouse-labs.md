@@ -1,0 +1,157 @@
+^ 1. Assume nothing
+  - start slow, assume nothing about what your audience knows
+
+^  Answer these questions:
+  - what is your technology's pedigree (who made it, who supports it, how old is it, who uses it?)
+  - what is your connection to it?
+  - what other technology is like this?
+  - how is this different/better than that?
+  - what problems does it solve?
+  - what are the disadvantages?
+  - what compromises do you have to make?
+
+### **A Little Bit About**
+# Typescript
+
+<br>
+### Kira McLean
+
+_twitter.com/kiraemclean_
+_github.com/kiramclean_
+
+[.footer: **○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○**]
+
+---
+
+# About Me
+
+![inline, 140%](../sama.png) ![inline, 40%](../lhl.png)
+![inline, 15%](../ruby.png) ![inline, 8%](../js.png)
+
+---
+
+# About Me
+
+![inline, 140%](../sama.png) ![inline, 40%](../lhl.png)
+![inline, 15%](../ruby.png) ![inline, 8%](../js.png) ![inline, 17%](ts.png)
+
+---
+![inline](ts.png)
+
+## _1._ What is it?
+## _2._ **Why use it?**
+## _3._ How to use it?
+
+---
+
+> What is it?
+
+---
+
+# What is it?
+
+- **Javascript + typing**
+
+![inline, 40%](ms.png)
+
+---
+
+# What is it?
+
+- **Javascript + typing**
+
+![inline, 40%](ms.png) ![inline, 60%](angular.png) ![inline, 12%](ionic.png)
+
+^ - open source language built and maintained by microsoft since 2012
+- superset of javascript with gradual typing
+    * can use all the js libraries that are already out there
+    * your JS code is already valid TS
+- angular is written in typescript
+- used by microsoft, google, also asana, lyft,
+
+---
+
+> What are types?
+
+---
+
+# What are types?
+<br>
+
+![inline](uncaught.png)
+
+---
+
+# What are types?
+
+**JS**
+
+```js
+let x = 5;
+x = 'hello' 
+
+// no problem
+```
+
+**TS**
+
+```ts
+let x = 5;
+x = 'hello' 
+
+// Type '"hello"' is not assignable to type 'number'.
+```
+
+^ You either say what type the thing is or typescript infers it, but either way it has a type and always has to be that type of thing
+
+---
+
+# What are types? 
+
+```ts
+
+function hello(name: string) {
+  "Hello" + name
+}
+
+
+hello('Kira'); 
+// no problem
+
+
+hello({ name: 'Kira' }) 
+// Argument of type '{ name: string; }' is not assignable 
+// to parameter of type 'string'.
+```
+
+---
+
+> Why use typescript?
+
+---
+
+# Why use typescript?
+
+- benefits of JS
+- tooling
+- next-version features
+
+---
+---
+
+
+- make a div that prints out all the attributes of mouse events
+
+
+# Inference vs. Assertion
+
+- what are types?
+- what is type safety?
+    + the idea is to catch errors earlier, at compile time instead of run time
+    + catch errors during development -- ones that are easy to miss and can only be identified by testing a running program
+- why use it?
+    + benefits of JS (huge ecosystem, runs everywhere -- mobile, web, desktop, servers,  but more scalable
+    + tooling
+        * tsserver integrates with an IDE
+        * tslint (community built and maintained, can be because TS is open source)
+    + uses latest ES-whatever features (fat arrows, classes, async/await) -- can write TS but target whatever ES version you want (replaces babel)

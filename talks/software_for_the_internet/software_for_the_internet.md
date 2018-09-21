@@ -21,8 +21,8 @@ _github.com/kiramclean_
 
 ^ - A community group of people teaching themselves how to code through online courses and meetups
 
-![inline, 15%](pitonneux.jpg) ![inline, 100%](sama.png) ![inline](mtlnewtech.png) 
-![inline, 15%](ruby.png) ![inline, 8%](js.png)
+![inline, 15%](pitonneux.jpg) ![inline, 100%](../sama.png) ![inline](mtlnewtech.png) 
+![inline, 15%](../ruby.png) ![inline, 8%](../js.png)
 
 [.footer: **○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○ ○**]
 
@@ -30,8 +30,8 @@ _github.com/kiramclean_
 
 # About Me
 
-![inline, 15%](pitonneux.jpg) ![inline, 100%](sama.png) ![inline](mtlnewtech.png) 
-![inline, 15%](ruby.png) ![inline, 8%](js.png) ![inline, 50%](elixir.png)
+![inline, 15%](pitonneux.jpg) ![inline, 100%](../sama.png) ![inline](mtlnewtech.png) 
+![inline, 15%](../ruby.png) ![inline, 8%](../js.png) ![inline, 50%](elixir.png)
 
 ^ - Excited about elixir
 
