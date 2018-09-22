@@ -1,0 +1,27 @@
+body {
+  display: flex;
+  font-family: Helvetica;
+  font-size: 2em;
+  height: 100vh;
+}
+
+.container {
+  border: 5px solid #31bfcc;
+  flex: 1;
+  height: 100%;
+  padding: 1em;
+  margin: 2em 0 2em 2em;
+}
+
+.container:last-of-type {
+  margin-right: 2em;
+}
+
+p {
+  background: #ddd;
+  margin: 0;
+  padding: 0.5em;
+}
+
+
+

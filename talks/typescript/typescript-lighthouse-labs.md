@@ -54,6 +54,11 @@ _github.com/kiramclean_
 
 ![inline, 40%](ms.png)
 
+^ - open source language built and maintained by microsoft since 2012
+- superset of javascript with gradual typing
+    * can use all the js libraries that are already out there
+    * your JS code is already valid TS
+
 ---
 
 # What is it?
@@ -62,16 +67,16 @@ _github.com/kiramclean_
 
 ![inline, 40%](ms.png) ![inline, 60%](angular.png) ![inline, 12%](ionic.png)
 
-^ - open source language built and maintained by microsoft since 2012
-- superset of javascript with gradual typing
-    * can use all the js libraries that are already out there
-    * your JS code is already valid TS
-- angular is written in typescript
+^ - angular is written in typescript, also ionic
 - used by microsoft, google, also asana, lyft,
+- I work mostly with typescript at work
+- makes it easier to maintain a large front-end code base
+- little bit of a learning curve if you're not familiar with the concept of typed languages, but worth it!
 
 ---
 
-> What are types?
+# What are types?
+<br>
 
 ---
 
@@ -81,8 +86,6 @@ _github.com/kiramclean_
 ![inline](uncaught.png)
 
 ---
-
-# What are types?
 
 **JS**
 
@@ -106,19 +109,23 @@ x = 'hello'
 
 ---
 
-# What are types? 
-
 ```ts
 
 function hello(name: string) {
   "Hello" + name
 }
+```
 
+**JS**
 
+```js
 hello('Kira'); 
 // no problem
+```
 
+**TS**
 
+```ts
 hello({ name: 'Kira' }) 
 // Argument of type '{ name: string; }' is not assignable 
 // to parameter of type 'string'.
@@ -126,24 +133,88 @@ hello({ name: 'Kira' })
 
 ---
 
+```ts
+class ListItem {
+  delete() {
+    // whatever implementation 
+  }
+}
+
+const item = new ListItem()
+```
+
+**JS**
+
+```js
+item.remove()
+
+// At runtime:
+// Uncaught TypeError: item.remove is not a function
+
+```
+
+**TS**
+
+```ts
+item.remove()
+
+// At compile time:
+// Property 'remove' does not exist on type 'ListItem'.
+```
+
+^ You either say what type the thing is or typescript infers it, but either way it has a type and always has to be that type of thing
+
+---
+
 > Why use typescript?
 
 ---
 
-# Why use typescript?
+_Why use typescript?_
+
+<br>
 
 - benefits of JS
 - tooling
 - next-version features
 
 ---
+
+### Popularity of programming languages
+
+![inline](pypl.png)
+
+_http://pypl.github.io_
+
 ---
+
+### Refactoring
+
+---
+
+### Auto-Formatting
+
+---
+
+### ES6/ES7 features
+
+---
+---
+---
+
 
 
 - make a div that prints out all the attributes of mouse events
 
 
 # Inference vs. Assertion
+
+---
+
+- 
+
+---
+
 
 - what are types?
 - what is type safety?
