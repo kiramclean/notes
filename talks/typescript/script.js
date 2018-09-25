@@ -1,11 +1,4 @@
-const mouseBox = document.querySelector('#mouse-events');
-
-console.log(mouseBox)
-
-mouseBox.addEventListener('mousedown', log);
-mouseBox.addEventListener('click', log);
-mouseBox.addEventListener('mousemove', log);
-
+var mouseBox = document.querySelector("#mouse-events");
 function log(event) {
-  console.log(event);
+    console.log(event);
 }

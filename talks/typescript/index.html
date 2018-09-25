@@ -7,13 +7,28 @@
 </head>
 <body>
   <div class="container" id="mouse-events">
-    <p>Click around in this box to inspect the mouse events</p>
-    <div class="config"></div>
   </div>
-  <div class="container">
-    <p>Events</p>
-    <pre id="log"></pre>
+  <div class="right">
+    <div class="container">
+      <h2>Events</h2>
+      <pre id="log"></pre>
+    </div>
+    <div class="container">
+      <h2>Events to log</h2>
+
+      <label><input type="checkbox" value="click" checked="true">Click</label>
+      <label><input type="checkbox" value="dblclick" checked="true">Double click</label>
+      <label><input type="checkbox" value="mousedown" checked="true">Mouse down</label>
+      <label><input type="checkbox" value="mouseenter" checked="true">Mouse enter</label>
+      <label><input type="checkbox" value="mouseleave" checked="true">Mouse leave</label>
+      <label><input type="checkbox" value="mousemove" checked="true">Mouse move</label>
+      <label><input type="checkbox" value="mouseout" checked="true">Mouse out</label>
+      <label><input type="checkbox" value="mouseover" checked="true">Mouse over</label>
+      <label><input type="checkbox" value="mouseup" checked="true">Mouse up</label>
+      <label><input type="checkbox" value="scroll" checked="true">Scroll</label>
+      <label><input type="checkbox" value="wheel" checked="true">Wheel</label>
+    </div>
   </div>
-  <script src="script.js"></script>
+  <script src="script.ts/script.js"></script>
 </body>
 </html>
