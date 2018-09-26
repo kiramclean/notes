@@ -168,10 +168,24 @@ item.remove()
 // Property 'remove' does not exist on type 'ListItem'.
 ```
 
-^ You either say what type the thing is or typescript infers it, but either way it has a type and always has to be that type of thing
-^ what is type safety?
+^ you either say what type the thing is or typescript infers it, but either way it has a type and always has to be that type of thing
+- what is type safety?
     + the idea is to catch errors earlier, at compile time instead of run time
     + catch errors during development -- ones that are easy to miss and can only be identified by testing a running program
+- demo on typescript playground
+  - everything has a type
+  - often times it's inferred (e.g. document.onmousemove = (event) => ...)
+  - type defition files are already there for node, jquery, dom, exist for pretty much everything else
+  - optional (mouse event handler can return any)
+
+---
+
+# **Typescript's typing system**
+
+- static analysis of existing JS types
+- infers most types
+- type definition files maintained separately
+- optional
 
 ---
 
@@ -196,42 +210,30 @@ _Why use typescript?_
 _http://pypl.github.io_
 
 ^ JS is super popular, you can use all the existing libraries in your typescript projects
+  - benefits of JS (huge ecosystem, runs everywhere -- mobile, web, desktop, servers, but more scalable
 
 ---
 
 # Tooling
 - Refactoring
 - Auto-formattting
+- Documentation
 
 ^ Because of the typing information, your editor can help you out with things like renaming and refactoring
+  - visual studio is free, built by microsoft
+  - tsserver integrates with your IDE
+  - tslint (community built and maintained)
 
 ---
 
 # ES6/ES7 features
 
----
+- classes, inheritance, private members
+- constructor shorthand
+- default argument values
+- arrow functions
+- async/await
 
----
----
----
-
-
-
-
-# Inference vs. Assertion
-
----
-
-- 
-
----
-
-
-- what are types?
-
-- why use it?
-    + benefits of JS (huge ecosystem, runs everywhere -- mobile, web, desktop, servers,  but more scalable
-    + tooling
-        * tsserver integrates with an IDE
-        * tslint (community built and maintained, can be because TS is open source)
-    + uses latest ES-whatever features (fat arrows, classes, async/await) -- can write TS but target whatever ES version you want (replaces babel)
+^ These things enable large-scale app development
+  - aligned with JS standards
+    
