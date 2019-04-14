@@ -1,4 +1,4 @@
-# What the hell is `this`
+# What is `this`
 
 - allows us to reuse the same function in different contexts
 - you don't know what `this` is in a function until that function is invoked

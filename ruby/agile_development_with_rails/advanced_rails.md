@@ -1,4 +1,4 @@
-# Rails
+Rails
 
 ## Aspect oriented programming
 - calling a method based on some circumstance or context in the app
